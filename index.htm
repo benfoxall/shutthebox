@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+	<title>Shut the box</title>
+	<style type="text/css" media="screen">
+body{font-family:Arial,"MS Trebuchet",sans-serif;margin:0;padding:0;font-size:2em;}
+#doors{padding:0;}
+li{list-style:none;background-color:#ccc;float:left;width:2em;height:2em;line-height:2em;text-align:center;border:1px solid #999;margin:.25em;cursor:pointer;}
+li.closed{background-color:#fafafa;color:#ccc;border-color:#ccc;}
+li.chosen{background-color:#f08;color:#fff;border-color:#f08;}
+#dice{font-size:3em;}
+p{clear:both;margin:10px;}
+	</style>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	
+	<script type="text/javascript" charset="utf-8">
+	
+		var total = 0;
+	
+		var roll = function(){
+			if(total != 0){
+				return;
+			}
+			
+			var a = Math.floor(Math.random()*6) + 1;
+			var b = Math.floor(Math.random()*6) + 1;
+			
+			$('#dice').text('...');
+			setTimeout(function(){
+				$('#dice').text(a + ', ' + b );	
+			},300);
+			
+			
+			total = a + b;
+		};
+		
+		var choose = function(e){
+			e.preventDefault();
+			
+			if(!$(this).hasClass('closed')){
+				$(this).toggleClass('chosen');
+			}
+			
+			//check that we can close some
+			var chosenTotal = 0;
+			$('.chosen').each(function(){
+				chosenTotal += parseInt($(this).text());
+			});
+			if(chosenTotal == total){
+				$('.chosen').each(function(){
+					$(this).removeClass('chosen');
+					$(this).addClass('closed');
+				});
+				total = 0;
+				roll();
+			}
+		};
+		
+		var reset = function(){
+			$('#doors li').removeClass('chosen').removeClass('closed');
+			total = 0;
+			roll();
+		}
+		
+		$(function(){
+			$('#doors li').click(choose);
+			$('#reset').click(reset);
+			roll();
+		})
+		
+	</script>
+</head>
+<body>
+	<p><input type="button" value="reset" id="reset" /></p>
+	<ol id="doors">
+		<li>1</li>
+		<li>2</li>
+		<li>3</li>
+		<li>4</li>
+		<li>5</li>
+		<li>6</li>
+		<li>7</li>
+		<li>8</li>
+		<li>9</li>
+	</ol>
+	<p id="dice">
+	</p>
+	
+	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-1591924-3']);
+	  _gaq.push(['_setDomainName', '.bfoxall.com']);
+	  _gaq.push(['_trackPageview']);
+
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+
+	</script>
+</body>
+</html>
