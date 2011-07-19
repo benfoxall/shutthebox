@@ -17,7 +17,20 @@ p{clear:both;margin:10px;}
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
 	
 	<script type="text/javascript" charset="utf-8">
-	
+		$.fn.reduce = function(callback, memo){
+			this.each(function(){
+				memo = callback.apply(this, [memo]);
+			});
+			return memo;
+		};
+		
+		var totalLeft = function(){
+			return $('li:not(.closed)').reduce(function(sofar){
+				return parseInt($(this).text(),10) + sofar;
+			},0);
+		}
+		
+		
 		var total = 0;
 	
 		var roll = function(){
@@ -25,17 +38,23 @@ p{clear:both;margin:10px;}
 				return;
 			}
 			
+			
 			var a = Math.floor(Math.random()*6) + 1;
 			var b = Math.floor(Math.random()*6) + 1;
 			
 			$('#dice').text('...');
+			
+			
+			var oneDice = totalLeft() < 7;
+						
+			var diceText = oneDice ? a : (a + ', ' + b);
+			total    = oneDice ? a : (a + b);
+			
 			setTimeout(function(){
-				$('#dice').text(a + ', ' + b );	
+				$('#dice').text(diceText);	
 				$('#total').text(total);
 			},300);
 			
-			
-			total = a + b;
 			$('#total').text('..');
 			
 		};
@@ -74,6 +93,17 @@ p{clear:both;margin:10px;}
 			$('#doors li').click(choose);
 			$('#reset').click(reset);
 			roll();
+			
+			//allow buttons to be pressed instead of clicking
+			var codes = $('li, input').reduce(function(memo){
+				var t = $(this).text() || $(this).val();
+				memo[t.charCodeAt(0)] = this;
+				return memo;
+			},{});
+			
+			$(document).keypress(function(e) {
+				codes[e.which] && $(codes[e.which]).click();
+			});
 		})
 		
 	</script>
