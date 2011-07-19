@@ -4,13 +4,14 @@
 <head>
 	<title>Shut the box</title>
 	<style type="text/css" media="screen">
-body{font-family:Arial,"MS Trebuchet",sans-serif;margin:0;padding:0;font-size:2em;}
+body{font-family:Arial,"MS Trebuchet",sans-serif;margin:0;padding:0;font-size:2em;-moz-user-select:none;-khtml-user-select:none;user-select:none;}
 #doors{padding:0;}
 li{list-style:none;background-color:#ccc;float:left;width:2em;height:2em;line-height:2em;text-align:center;border:1px solid #999;margin:.25em;cursor:pointer;}
 li.closed{background-color:#fafafa;color:#ccc;border-color:#ccc;}
 li.chosen{background-color:#f08;color:#fff;border-color:#f08;}
 #dice{font-size:3em;}
 p{clear:both;margin:10px;}
+#reset{font-size:2em;}
 	</style>
 	
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.1/jquery.min.js" type="text/javascript" charset="utf-8"></script>
@@ -30,10 +31,13 @@ p{clear:both;margin:10px;}
 			$('#dice').text('...');
 			setTimeout(function(){
 				$('#dice').text(a + ', ' + b );	
+				$('#total').text(total);
 			},300);
 			
 			
 			total = a + b;
+			$('#total').text('..');
+			
 		};
 		
 		var choose = function(e){
@@ -55,6 +59,8 @@ p{clear:both;margin:10px;}
 				});
 				total = 0;
 				roll();
+			} else {
+				$('#total').text(total - chosenTotal);
 			}
 		};
 		
@@ -87,7 +93,8 @@ p{clear:both;margin:10px;}
 	</ol>
 	<p id="dice">
 	</p>
-	
+	<p id="total">
+	</p>
 	<script type="text/javascript">
 
 	  var _gaq = _gaq || [];
